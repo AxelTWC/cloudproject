@@ -4,9 +4,9 @@ _Introduction to Cloud Computing Project_
 ---
 
 ## 📖 Overview
-##### - The purpose or goal of the project
-##### - The main problem it solves
-##### - Key features or functionalities
+##### - The purpose of the project...
+##### - The main problem...
+##### - Key features or functionalities...
 
 Example:
 > This project implements ...
@@ -15,8 +15,8 @@ Example:
 
 ## 🧰 Tech Stack
 
-**Languages:** 
-**Libraries:** 
+**Languages:** ...
+**Libraries:** ...
 **Tools:** VS Code / Docker
 
 ---
