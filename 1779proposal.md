@@ -76,6 +76,9 @@ To achieve our project objective within a few weeks, we plan to follow a clear a
 
 We believe that with this plan and clear division of responsibilities, we can complete the project on time with good quality. The scope is manageable for two people, and we will make sure the application demonstrates all required cloud technologies from the course.
 
+Student Names:
+Axel Tang
+Astral Yu
 
 
 
