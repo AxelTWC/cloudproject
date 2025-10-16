@@ -60,6 +60,8 @@ Our team has two members, and we will work closely together to complete the proj
 
 #### **Team Responsibilities**
 
+###### **_Subject To Change_**
+
 **Member 1 (Backend and Database)**
 This member will mainly focus on the backend system using Node.js and Express. The responsibilities include designing REST APIs for user authentication, file upload, and version control. This member will also handle database schema design and integration with PostgreSQL. Persistent storage will be set up using DigitalOcean Volumes to make sure data is not lost during restarts. In addition, this member will help implement the authentication logic and access control for different user roles.
 
@@ -68,11 +70,12 @@ This member will take charge of the frontend interface and overall system deploy
 
 #### **Collaboration and Timeline**
 
-Both members will communicate frequently through WeChat, GitHub and online and offline meetings. 
+Both members will communicate frequently through WeChat and online/offline meetings. 
 
 To achieve our project objective within a few weeks, we plan to follow a clear and step-by-step development process. First, we will set up the local development environment using Docker and Docker Compose, and initialize the Git repository with proper branch management. Next, we will design and implement the PostgreSQL database schema, including tables for users, files, versions, and tags, and configure persistent storage using DigitalOcean Volumes to ensure data safety. After that, the backend development will start, focusing on REST API implementation for user authentication, file uploading, version control, and permission management, with continuous testing to ensure correctness. Meanwhile, the frontend will be developed to provide user interface for file upload, file list display, login and registration, and permission visualization, calling backend APIs and showing data properly. Once the core functions are implemented, we will containerize the application locally using Docker Compose and then deploy it to DigitalOcean with Docker Swarm, configuring load balancing for better performance. After deployment, we will implement advanced features including Security with HTTPS and secrets management, and Database Backup & Recovery for regular automated backups to cloud storage (PostgreSQL + DigitalOcean Spaces). By following this plan, each step is clear, responsibilities are manageable, and we are confident that the project can be completed successfully within the course timeline.
 
 We believe that with this plan and clear division of responsibilities, we can complete the project on time with good quality. The scope is manageable for two people, and we will make sure the application demonstrates all required cloud technologies from the course.
+
 
 
 
