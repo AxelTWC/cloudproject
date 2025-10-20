@@ -27,6 +27,7 @@ model File {
   id        Int      @id @default(autoincrement())
   filename  String
   url       String
+  version   Int      @default(1)
   ownerId   Int
   owner     User     @relation(fields: [ownerId], references: [id])
   createdAt DateTime @default(now())
