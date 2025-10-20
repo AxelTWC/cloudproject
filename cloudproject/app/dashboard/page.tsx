@@ -75,13 +75,21 @@ export default function Dashboard() {
         {files.map((file) => (
           <li key={file.id} className="border p-2 rounded flex justify-between items-center">
             <div>
-              <a
+              {/* <a 
                 href={file.url}
                 target="_blank"
                 className="text-blue-500 underline mr-2"
               >
                 {file.filename}
+              </a> */}
+              <a
+                href={`/api/download/${file.url.split("/").pop()}`}
+                target="_blank"
+                className="text-blue-500 underline"
+              >
+                {file.filename} {file.version && `(v${file.version})`}
               </a>
+
               <span className="text-gray-500 text-sm">v{file.version}</span>
             </div>
             <span className="text-gray-400 text-sm">
