@@ -25,8 +25,8 @@ Example:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/username/project-name.git
-cd project-name
+git clone https://github.com/AxelTWC/cloudproject/
+cd cloudproject
 ```
 ---
 
