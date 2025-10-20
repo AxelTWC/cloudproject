@@ -16,7 +16,9 @@ Example:
 ## 🧰 Tech Stack
 
 **Languages:** ...
+
 **Libraries:** ...
+
 **Tools:** VS Code / Docker
 
 ---
