@@ -29,11 +29,9 @@ export default function Dashboard() {
   const [newTags, setNewTags] = useState<{ [key: number]: string }>({});
   const [newComments, setNewComments] = useState<{ [key: number]: string }>({});
 
-  // TODO: 当前登录用户ID，后续可替换成登录状态
-  const userId = "1";
-
+  
   const fetchFiles = async () => {
-    const res = await fetch("/api/files");
+    const res = await fetch("/api/files", { credentials: "include" });
     const data = await res.json();
     setFiles(data);
   };
@@ -47,11 +45,11 @@ export default function Dashboard() {
 
     const formData = new FormData();
     formData.append("file", fileToUpload);
-    formData.append("userId", userId);
 
     const res = await fetch("/api/upload", {
       method: "POST",
       body: formData,
+      credentials: "include", 
     });
 
     const data = await res.json();
@@ -72,6 +70,7 @@ export default function Dashboard() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fileId, name: tagName }),
+      credentials: "include", 
     });
 
     if (res.ok) {
@@ -94,6 +93,7 @@ export default function Dashboard() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fileId, text }),
+      credentials: "include", 
     });
 
     if (res.ok) {

@@ -27,8 +27,10 @@ export default function LoginPage() {
         return;
       }
 
-      alert("Login successful!");
-      router.push("/dashboard"); // 登录后跳转到 dashboard
+      document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+
+     
+      router.push("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     }
@@ -64,9 +66,7 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <button
             type="submit"
