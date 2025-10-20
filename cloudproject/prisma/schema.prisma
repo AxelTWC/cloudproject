@@ -16,10 +16,10 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       Int    @id @default(autoincrement())
+  email    String @unique
   password String
-  role     String   @default("viewer")
+  role     String @default("viewer")
   files    File[]
 }
 
@@ -31,5 +31,13 @@ model File {
   ownerId   Int
   owner     User     @relation(fields: [ownerId], references: [id])
   createdAt DateTime @default(now())
+
+  tags Tag[]
 }
 
+model Tag {
+  id     Int    @id @default(autoincrement())
+  name   String
+  fileId Int
+  file   File   @relation(fields: [fileId], references: [id])
+}

@@ -55,16 +55,22 @@ export default function Dashboard() {
   const handleAddTag = async (fileId: number) => {
     const tagName = newTags[fileId];
     if (!tagName) return;
-
+  
     const res = await fetch("/api/tags", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fileId, name: tagName }),
     });
-
+  
     if (res.ok) {
+      setFiles((prevFiles) =>
+        prevFiles.map((f) =>
+          f.id === fileId
+            ? { ...f, tags: [...(f.tags || []), { id: Date.now(), name: tagName }] }
+            : f
+        )
+      );
       setNewTags((prev) => ({ ...prev, [fileId]: "" }));
-      fetchFiles();
     }
   };
 
