@@ -10,6 +10,7 @@ export async function GET(req: Request) {
     orderBy: { createdAt: "desc" },
     include: {
       tags: true, 
+      comments: true
     },
   });
 

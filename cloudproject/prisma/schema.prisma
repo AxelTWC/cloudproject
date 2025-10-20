@@ -33,6 +33,7 @@ model File {
   createdAt DateTime @default(now())
 
   tags Tag[]
+  comments  Comment[]
 }
 
 model Tag {
@@ -41,3 +42,13 @@ model Tag {
   fileId Int
   file   File   @relation(fields: [fileId], references: [id])
 }
+
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  fileId    Int
+  file      File     @relation(fields: [fileId], references: [id])
+  createdAt DateTime @default(now())
+}
+

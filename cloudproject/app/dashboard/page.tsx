@@ -2,13 +2,24 @@
 
 import { useEffect, useState } from "react";
 
+interface TagType {
+  id: number;
+  name: string;
+}
+
+interface CommentType {
+  id: number;
+  text: string;
+}
+
 interface FileType {
   id: number;
   filename: string;
   url: string;
   version: number;
   createdAt: string;
-  tags?: { id: number; name: string }[];
+  tags?: TagType[];
+  comments?: CommentType[];
 }
 
 export default function Dashboard() {
@@ -16,6 +27,7 @@ export default function Dashboard() {
   const [fileToUpload, setFileToUpload] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [newTags, setNewTags] = useState<{ [key: number]: string }>({});
+  const [newComments, setNewComments] = useState<{ [key: number]: string }>({});
 
   // TODO: 当前登录用户ID，后续可替换成登录状态
   const userId = "1";
@@ -55,13 +67,13 @@ export default function Dashboard() {
   const handleAddTag = async (fileId: number) => {
     const tagName = newTags[fileId];
     if (!tagName) return;
-  
+
     const res = await fetch("/api/tags", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fileId, name: tagName }),
     });
-  
+
     if (res.ok) {
       setFiles((prevFiles) =>
         prevFiles.map((f) =>
@@ -71,6 +83,29 @@ export default function Dashboard() {
         )
       );
       setNewTags((prev) => ({ ...prev, [fileId]: "" }));
+    }
+  };
+
+  const handleAddComment = async (fileId: number) => {
+    const text = newComments[fileId];
+    if (!text) return;
+
+    const res = await fetch("/api/comments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fileId, text }),
+    });
+
+    if (res.ok) {
+      const createdComment = await res.json();
+      setFiles((prevFiles) =>
+        prevFiles.map((f) =>
+          f.id === fileId
+            ? { ...f, comments: [...(f.comments || []), createdComment] }
+            : f
+        )
+      );
+      setNewComments((prev) => ({ ...prev, [fileId]: "" }));
     }
   };
 
@@ -98,9 +133,9 @@ export default function Dashboard() {
         {files.map((file) => (
           <li
             key={file.id}
-            className="border p-3 rounded flex flex-col md:flex-row md:justify-between md:items-center"
+            className="border p-3 rounded flex flex-col md:flex-row md:justify-between md:items-start"
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1">
               <a
                 href={`/api/download/${file.url.split("/").pop()}`}
                 target="_blank"
@@ -112,7 +147,7 @@ export default function Dashboard() {
                 Uploaded: {new Date(file.createdAt).toLocaleString()}
               </span>
 
-              {/* 显示标签 */}
+              {/* 标签 */}
               <div className="mt-1 flex flex-wrap gap-2">
                 {file.tags?.map((tag) => (
                   <span
@@ -124,7 +159,7 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              {/* 添加新标签 */}
+              {/* 添加标签 */}
               <div className="mt-2 flex gap-2">
                 <input
                   type="text"
@@ -133,7 +168,7 @@ export default function Dashboard() {
                   onChange={(e) =>
                     setNewTags((prev) => ({ ...prev, [file.id]: e.target.value }))
                   }
-                  className="border px-2 py-1 rounded"
+                  className="border px-2 py-1 rounded flex-1"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleAddTag(file.id);
                   }}
@@ -141,6 +176,37 @@ export default function Dashboard() {
                 <button
                   className="px-3 py-1 bg-green-500 text-white rounded"
                   onClick={() => handleAddTag(file.id)}
+                >
+                  Add
+                </button>
+              </div>
+
+              {/* 评论 */}
+              <div className="mt-2 space-y-1">
+                {file.comments?.map((c) => (
+                  <div key={c.id} className="text-gray-700 text-sm border-l-2 pl-2">
+                    {c.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* 添加评论 */}
+              <div className="mt-2 flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Add comment"
+                  value={newComments[file.id] || ""}
+                  onChange={(e) =>
+                    setNewComments((prev) => ({ ...prev, [file.id]: e.target.value }))
+                  }
+                  className="border px-2 py-1 rounded flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleAddComment(file.id);
+                  }}
+                />
+                <button
+                  className="px-3 py-1 bg-indigo-500 text-white rounded"
+                  onClick={() => handleAddComment(file.id)}
                 >
                   Add
                 </button>
