@@ -1,0 +1,32 @@
+# Ignore node modules and local build artifacts to keep Docker build context small
+node_modules
+/.next
+dist
+out
+build
+
+# Ignore local editor, OS and VCS files
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Ignore environment files and local secrets
+.env
+.env.*
+cookie.txt
+
+# Ignore uploads and other large data directories (mounted via volume in compose)
+uploads
+uploads/*
+
+# Ignore local docker certs or pem files
+*.pem
+
+# OneDrive and system files that can cause strange file modes
+desktop.ini
+Thumbs.db
+
+# Exclude the local node_modules bind mount path used by compose
+/app/node_modules

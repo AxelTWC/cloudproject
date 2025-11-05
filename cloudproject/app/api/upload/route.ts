@@ -26,6 +26,7 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
+    const logical = formData.get("logicalFilename") as string | null;
 
     if (!file) {
       return NextResponse.json({ error: "Missing file" }, { status: 400 });
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
 
     if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
 
-    const filename = file.name;
+    const filename = logical || file.name;
 
     const latestFile = await prisma.file.findFirst({
       where: { filename, ownerId: userId },
@@ -42,16 +43,18 @@ export async function POST(req: Request) {
     const newVersion = latestFile ? latestFile.version + 1 : 1;
 
     const timestamp = Date.now();
-    const savedFilename = `${timestamp}-${filename}`;
-    const filePath = path.join(UPLOAD_DIR, savedFilename);
+    const savedFilename = `${timestamp}-${file.name}`;
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    fs.writeFileSync(filePath, buffer);
+
+    // Save using storage adapter (local or Spaces)
+    const { saveFile } = await import("@/lib/storage");
+    const savedUrl = await saveFile(buffer, savedFilename);
 
     const dbFile = await prisma.file.create({
       data: {
         filename,
-        url: `/uploads/${savedFilename}`,
+        url: savedUrl,
         version: newVersion,
         ownerId: userId,
       },

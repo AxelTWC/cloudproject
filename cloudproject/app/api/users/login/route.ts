@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getCookieOptions } from "@/lib/security";
 
-const SECRET = "my_super_secret_key"; 
+const SECRET = process.env.JWT_SECRET || "my_super_secret_key";
 
 export async function POST(req: Request) {
   const data = await req.json();
@@ -25,5 +26,17 @@ export async function POST(req: Request) {
     expiresIn: "1h",
   });
 
-  return NextResponse.json({ token });
+  const res = NextResponse.json({ message: "Login successful" });
+  const cookieOpts = getCookieOptions();
+  res.cookies.set({
+    name: "token",
+    value: token,
+    httpOnly: cookieOpts.httpOnly,
+    path: cookieOpts.path,
+    maxAge: cookieOpts.maxAge,
+    sameSite: cookieOpts.sameSite,
+    secure: cookieOpts.secure,
+  });
+
+  return res;
 }
