@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getCookieOptions } from "@/lib/security";
 
 const prisma = new PrismaClient();
 
@@ -23,14 +24,17 @@ export async function POST(req: Request) {
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
 
-    const res = NextResponse.json({ message: "Login successful", user: { id: user.id, email: user.email, role: user.role,token } });
+    const res = NextResponse.json({ message: "Login successful", user: { id: user.id, email: user.email, role: user.role, token } });
+    const cookieOpts = getCookieOptions();
+    // set cookie with secure options (secure flag toggled by NODE_ENV or COOKIE_SECURE)
     res.cookies.set({
       name: "token",
       value: token,
-      httpOnly: true, 
-      path: "/",      
-      maxAge: 7 * 24 * 60 * 60, 
-      sameSite: "lax", 
+      httpOnly: cookieOpts.httpOnly,
+      path: cookieOpts.path,
+      maxAge: cookieOpts.maxAge,
+      sameSite: cookieOpts.sameSite,
+      secure: cookieOpts.secure,
     });
 
     return res;
