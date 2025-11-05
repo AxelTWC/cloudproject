@@ -54,11 +54,6 @@ export default function Home() {
             </li>
           </ul>
         </section>
-
-        {/* Footer */}
-        <footer className="mt-8 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} CloudShare. All rights reserved.
-        </footer>
       </div>
     </div>
   );
