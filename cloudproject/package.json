@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "npx prisma migrate deploy && npx next start -p ${PORT:-3000}",
+    "start": "npx prisma migrate deploy && next start -H 0.0.0.0 -p ${PORT:-8080}",
+
     "lint": "eslint"
   },
   "dependencies": {
