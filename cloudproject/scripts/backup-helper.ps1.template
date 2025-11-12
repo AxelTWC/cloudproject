@@ -1,0 +1,100 @@
+# PostgreSQL Backup and Restore Scripts
+# 
+# Quick reference for running backups and restores locally via Docker
+# 
+# INSTRUCTIONS:
+# 1. Copy this file to backup-helper.ps1 (already in .gitignore)
+# 2. Replace all YOUR_* placeholders with actual values
+# 3. Run: . .\scripts\backup-helper.ps1
+# 4. NEVER commit the file with real credentials to git!
+
+# Load environment variables
+$env:PGHOST = "YOUR_POSTGRES_HOST"  # e.g., "db" for Docker Compose
+$env:PGPORT = "5432"
+$env:PGUSER = "YOUR_POSTGRES_USER"
+$env:PGPASSWORD = "YOUR_POSTGRES_PASSWORD"
+$env:PGDATABASE = "YOUR_DATABASE_NAME"
+$env:SPACES_KEY = "YOUR_SPACES_ACCESS_KEY"
+$env:SPACES_SECRET = "YOUR_SPACES_SECRET_KEY"
+$env:SPACES_BUCKET = "YOUR_SPACES_BUCKET_NAME"
+$env:SPACES_ENDPOINT = "YOUR_SPACES_ENDPOINT"  # e.g., "https://nyc3.digitaloceanspaces.com"
+$env:SPACES_REGION = "YOUR_SPACES_REGION"  # e.g., "nyc3"
+
+# Function to run backup
+function Run-Backup {
+    Write-Host "Starting backup..." -ForegroundColor Green
+    docker run --rm --network cloudproject_default `
+        -e PGHOST=$env:PGHOST `
+        -e PGPORT=$env:PGPORT `
+        -e PGUSER=$env:PGUSER `
+        -e PGPASSWORD=$env:PGPASSWORD `
+        -e PGDATABASE=$env:PGDATABASE `
+        -e SPACES_KEY=$env:SPACES_KEY `
+        -e SPACES_SECRET=$env:SPACES_SECRET `
+        -e SPACES_BUCKET=$env:SPACES_BUCKET `
+        -e SPACES_ENDPOINT=$env:SPACES_ENDPOINT `
+        -e SPACES_REGION=$env:SPACES_REGION `
+        -e PREFIX=backups/ `
+        local/pg-backup:latest
+}
+
+# Function to run restore
+function Run-Restore {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$BackupFile
+    )
+    
+    Write-Host "Starting restore from: $BackupFile" -ForegroundColor Yellow
+    Write-Host "WARNING: This will overwrite the current database!" -ForegroundColor Red
+    $confirm = Read-Host "Type 'yes' to continue"
+    
+    if ($confirm -ne "yes") {
+        Write-Host "Restore cancelled." -ForegroundColor Yellow
+        return
+    }
+    
+    docker run --rm --network cloudproject_default `
+        -e PGHOST=$env:PGHOST `
+        -e PGPORT=$env:PGPORT `
+        -e PGUSER=$env:PGUSER `
+        -e PGPASSWORD=$env:PGPASSWORD `
+        -e PGDATABASE=$env:PGDATABASE `
+        -e SPACES_KEY=$env:SPACES_KEY `
+        -e SPACES_SECRET=$env:SPACES_SECRET `
+        -e SPACES_BUCKET=$env:SPACES_BUCKET `
+        -e SPACES_ENDPOINT=$env:SPACES_ENDPOINT `
+        -e SPACES_REGION=$env:SPACES_REGION `
+        --entrypoint /app/pg_restore.sh `
+        local/pg-backup:latest $BackupFile
+    
+    Write-Host "Restore completed!" -ForegroundColor Green
+}
+
+# Function to list backups
+function List-Backups {
+    Write-Host "Available backups in Spaces:" -ForegroundColor Cyan
+    Write-Host "Note: Install AWS CLI to list backups" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Visit: https://cloud.digitalocean.com/spaces" -ForegroundColor Cyan
+    Write-Host "Navigate to: $env:SPACES_BUCKET > backups/" -ForegroundColor Cyan
+}
+
+# Display usage
+Write-Host @"
+===========================================
+PostgreSQL Backup & Restore Utility
+===========================================
+
+Available commands:
+  Run-Backup                  - Create a new backup
+  Run-Restore <filename>      - Restore from backup
+  List-Backups                - Show available backups
+
+Examples:
+  Run-Backup
+  Run-Restore "backups/cloudproject_backup_20251112T133914Z.dump.gz"
+  List-Backups
+
+===========================================
+"@ -ForegroundColor Cyan
