@@ -7,7 +7,8 @@ A cloud-based file storage and collaboration platform that enables users to uplo
 
 ### Key Features
 
-- **User Authentication & Role Management** - Secure login with role-based permissions. [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **User Authentication & Role Management** - Secure login with role-based permissions. 
+[http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 - **File Upload & Version Control** - Track file changes and restore previous versions
 
