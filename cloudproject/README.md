@@ -6,28 +6,6 @@
 
 ## 📖 Overview
 
-First, run the development server:
-
-This project implements a **cloud-based file storage and collaboration platform** that enables users to upload, manage, and collaborate on files with version control and secure access. Built with modern cloud technologies, it demonstrates containerization, orchestration, database management, and automated backup systems.
-
-```bash
-
-### The Problem We Solvenpm run dev
-
-In collaborative environments, teams need a reliable way to:# or
-
-- Store and share files securelyyarn dev
-
-- Track changes with version history# or
-
-- Manage user permissions and access controlpnpm dev
-
-- Ensure data persistence and disaster recovery# or
-
-- Scale resources based on demandbun dev
-
-```
-
 ### Key Features
 
 - **User Authentication & Role Management** - Secure login with role-based permissionsOpen [http://localhost:3000](http://localhost:3000) with your browser to see the result.
