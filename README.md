@@ -38,47 +38,42 @@ This is a course project for Introduction to Cloud Computing.
 ## 🧰 Tech Stack
 
 ### Frontend
-- **Next.js** - React framework with App Router
-- **React** - UI library
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
-- **HTML5 & CSS3** - Modern web standards
+- **Next.js** 
+- **React** 
+- **TypeScript**
+- **Tailwind CSS**
+- **HTML5 & CSS3**
 
 ### Backend
-- **Node.js** - JavaScript runtime
-- **Next.js API Routes** - Serverless API endpoints
-- **Prisma ORM** - Type-safe database client
-- **JWT** - JSON Web Tokens for authentication
+- **Node.js**
+- **Next.js API Routes**
+- **Prisma ORM**
+- **JWT**
 
 ### Database
-- **PostgreSQL** - Relational database
-- **Prisma Migrate** - Database migration tool
+- **PostgreSQL**
+- **Prisma Migrate**
 
 ### Storage & Backups
-- **DigitalOcean Spaces** - S3-compatible object storage
-- **AWS SDK v3** - S3 client for Spaces API
-- **pg_dump/pg_restore** - PostgreSQL backup utilities
+- **DigitalOcean Spaces**
+- **AWS SDK v3**
+- **pg_dump/pg_restore**
 
 ### DevOps & Deployment
-- **Docker** - Container runtime
-- **Docker Compose** - Multi-container orchestration
-- **Docker Swarm** - Container orchestration (production)
-- **Kubernetes** - Container orchestration (optional)
-- **Fly.io** - Platform-as-a-Service deployment
-- **Nginx** - Reverse proxy
+- **Docker**
+- **Docker Compose**
+- **Docker Swarm**
+- **Kubernetes**
+- **Fly.io**
+- **Nginx**
 
 ### Development Tools
-- **Git & GitHub** - Version control
-- **VS Code** - Code editor
-- **ESLint** - Code linting
-- **npm** - Package manager
+- **Git & GitHub**
+- **VS Code**
+- **npm**
 
 ### Cloud Platform
-- **DigitalOcean** - Cloud infrastructure
-  - Droplets (Virtual Machines)
-  - Spaces (Object Storage)
-  - Volumes (Block Storage)
-  - Monitoring & Alerts
+- **DigitalOcean**
 
 ## 🔗 Links
 
