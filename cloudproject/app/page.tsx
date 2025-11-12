@@ -54,6 +54,7 @@ export default function Home() {
             </li>
           </ul>
         </section>
+
       </div>
     </div>
   );

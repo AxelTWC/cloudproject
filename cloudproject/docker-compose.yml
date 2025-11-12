@@ -11,6 +11,11 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
+      SPACES_KEY: ${SPACES_KEY}
+      SPACES_SECRET: ${SPACES_SECRET}
+      SPACES_BUCKET: ${SPACES_BUCKET}
+      SPACES_ENDPOINT: ${SPACES_ENDPOINT}
+      SPACES_REGION: ${SPACES_REGION}
       # NODE_ENV: development
     depends_on:
       - db
@@ -18,6 +23,7 @@ services:
       - .:/app
       # - /app/node_modules
       - uploads_data:/app/uploads
+      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket
     command: npm run dev
 
 
