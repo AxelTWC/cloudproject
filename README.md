@@ -7,19 +7,19 @@ A cloud-based file storage and collaboration platform that enables users to uplo
 
 ### Key Features
 
-- **User Authentication & Role Management** - Secure login with role-based permissionsOpen [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **User Authentication & Role Management** - Secure login with role-based permissions. [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 - **File Upload & Version Control** - Track file changes and restore previous versions
 
-- **Metadata & Tagging System** - Organize files with tags and commentsYou can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Metadata & Tagging System** - Organize files with tags and comments
 
 - **Automated Database Backups** - Regular backups to DigitalOcean Spaces
 
-- **Containerized Deployment** - Docker & Docker Compose for easy deploymentThis project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Containerized Deployment** - Docker & Docker Compose for easy deployment
 
 - **HTTPS & Security** - Encrypted data transfer and secure credential management
 
-- **Monitoring & Observability** - Performance tracking and system health monitoring## Learn More
+- **Monitoring & Observability** - Performance tracking and system health monitoring
 
 ### Run Tests Locally
 ```bash
