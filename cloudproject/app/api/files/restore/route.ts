@@ -35,7 +35,8 @@ export async function POST(req: Request) {
       orderBy: { version: "desc" },
     });
 
-    const target = allVersions.find(f => f.version === version);
+    // const target = allVersions.find(f => f.version === version);
+    const target = allVersions.find((f: any) => f.version === version);
     if (!target)
       return NextResponse.json({ error: "version not found" }, { status: 404 });
 

@@ -27,7 +27,7 @@ export default function LoginPage() {
         return;
       }
 
-      document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`;
+      document.cookie = `token=${data.user.token}; path=/; max-age=${60 * 60 * 24 * 7}`;
 
      
       router.push("/dashboard");

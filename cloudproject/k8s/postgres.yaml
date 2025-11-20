@@ -7,8 +7,9 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
+  storageClassName: do-block-storage
   hostPath:
-    path: /mnt/data/postgres   # Minikube 本地路径，可修改
+    path: /mnt/data/postgres
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,6 +21,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: do-block-storage
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -47,6 +49,8 @@ spec:
           value: "123"
         - name: POSTGRES_DB
           value: "cloudproject"
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
         volumeMounts:
         - name: postgres-storage
           mountPath: /var/lib/postgresql/data
@@ -63,7 +67,7 @@ spec:
   selector:
     app: cloudproject-postgres
   ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
   type: ClusterIP

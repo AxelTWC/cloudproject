@@ -3,24 +3,24 @@ import { NextRequest, NextResponse } from "next/server";
 // Global middleware to enforce HTTPS (in production) and set secure headers.
 export function middleware(req: NextRequest) {
   const forwardedProto = req.headers.get("x-forwarded-proto");
-  const nextProto = req.nextUrl && req.nextUrl.protocol; // may be like 'http:' or 'https:'
+  const nextProto = req.nextUrl && req.nextUrl.protocol; 
 
-  // Normalize detection: header (http/https) or nextUrl.protocol (which may include colon)
+
   const isHttp = (forwardedProto === "http") || (typeof nextProto === "string" && nextProto.startsWith("http:"));
 
-  // Redirect HTTP -> HTTPS in production, or when FORCE_HTTPS=true (useful for local testing)
+
+  const disableRedirect = process.env.DISABLE_HTTPS_REDIRECT === "true";
   const force = process.env.FORCE_HTTPS === "true";
-  if (isHttp && (process.env.NODE_ENV === "production" || force)) {
+  
+  if (isHttp && !disableRedirect && (process.env.NODE_ENV === "production" || force)) {
     const url = req.nextUrl.clone();
     url.protocol = "https";
-    // Allow configurable redirect status (default 302). In production you may want 301.
     const status = parseInt(process.env.REDIRECT_STATUS || "302", 10) || 302;
     return NextResponse.redirect(url, status);
   }
 
   const res = NextResponse.next();
 
-  // Add common security headers unless explicitly disabled
   if (process.env.SECURE_HEADERS !== "false") {
     res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
     res.headers.set("X-Frame-Options", "DENY");

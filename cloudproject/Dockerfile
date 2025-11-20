@@ -1,8 +1,23 @@
-FROM node:22
+FROM node:22 AS base
 
+
+FROM base AS builder
 WORKDIR /app
 
-# Install Docker CLI
+
+COPY package*.json ./
+RUN npm ci
+
+
+COPY . .
+RUN npx prisma generate
+RUN npm run build
+
+
+FROM base AS runner
+WORKDIR /app
+
+
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
@@ -17,14 +32,15 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y docker-ce-cli \
     && rm -rf /var/lib/apt/lists/*
 
-COPY package*.json ./
-RUN npm install
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
-COPY . .
 
-RUN npx prisma generate
-RUN npm run build
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
-EXPOSE 8080
+EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
