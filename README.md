@@ -64,7 +64,6 @@ This is a course project for Introduction to Cloud Computing.
 ### DevOps & Deployment
 - **Docker**
 - **Docker Compose**
-- **Docker Swarm**
 - **Kubernetes**
 - **Fly.io**
 - **Nginx**
