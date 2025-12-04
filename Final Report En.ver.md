@@ -9,15 +9,24 @@
 ## 1. Team Information
 
 - **Member 1:** Astra Yu — Student ID: 1011466423 — Email: miing.yu@mail.utoronto.ca
-- **Member 2:**
+- **Member 2:** Axel Tang — Student ID: 1006832144 — Email: axel.tang@mail.utoronto.ca
 
 ------
 
 ## 2. Motivation
+Nowadays, cloud storage and online collaboration platforms such as Google Drive, OneDrive or Dropbox are very common for both study and work. However, they usually come with some clear limitations. Most of them have strict storage limits for free users, like Google Drive, as a user, every time our club holds an event, we have to create a new account for more space and upgrading to higher storage plans can be quite expensive and unaffordable. In addition, these commercial platforms are controlled by large companies, which means users have little control over their own data. Many users or organizations who care about privacy or who want to host their own data cannot easily do so. In addition, the products of these large companies all have certain uncontrollable issues to some extent. For instance, users sometimes complain that their stored data messages have been lost, or the data has been compressed without permission, resulting in data distortion. The products of large companies have their own business logic, so these undisclosed and uncontrollable issues are almost impossible to be resolved.
 
+Our project is motivated by this problem. We want to build a simple and practical content-sharing and collaboration platform that users can self-host on their own cloud environment. In this way, users can fully control their data and decide their own policies for storage and access. The platform will allow file uploading, version control, and collaborative sharing within a private group, which can be useful for both small organizations and student project teams.
+
+We believe this project is meaningful because there is a growing need for private and cost-effective storage solutions, especially for small and medium businesses that do not want to depend on big cloud providers. Also, for university students who work together on shared assignments or course projects, a self-hosted system can give them more flexibility and privacy.
+
+Existing solutions like Google Drive are powerful, but they are not suitable for people who prefer self-hosting and data control. They also become costly when users need to scale up storage or add more members. Therefore, our project aims to fill this gap by providing a lightweight and customizable alternative for small teams who value independence, privacy, and collaboration. Compared with the products of large companies, it is more transparent and more controllable.
 ------
 
 ## 3. Objectives
+
+testsetestsetsetest
+
 
 ------
 
@@ -199,10 +208,16 @@ The course requires at least integrating provider tool's logs or metrics, and se
   - Local development and code implementation, including completing the main backend and frontend framework code development locally.
   - Implemented the five core functions of the project, such as Docker build and debugging and all containerization operations, local Kubernetes (Minikube) environment setup and debugging, multi-cloud deployment: migration from Fly.io → DigitalOcean, database and storage configuration, etc.
   - Write documents.
-- Member 2
-
+- Member 2 Axel Tang
+   - Development on the UI , two adavanced features of HTTPS security and DigitalOcean Backup and Recovery of user file data
+   - Development of previously noted core feature - File Versioning 
+   - Development of routing such as login/logout and home page.
 ------
 
 ## 13. Lessons Learned & Conclusion
 
+
 During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build.
+
+
+---testsetestset
