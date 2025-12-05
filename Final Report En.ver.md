@@ -21,12 +21,17 @@ Our project is motivated by this problem. We want to build a simple and practica
 We believe this project is meaningful because there is a growing need for private and cost-effective storage solutions, especially for small and medium businesses that do not want to depend on big cloud providers. Also, for university students who work together on shared assignments or course projects, a self-hosted system can give them more flexibility and privacy.
 
 Existing solutions like Google Drive are powerful, but they are not suitable for people who prefer self-hosting and data control. They also become costly when users need to scale up storage or add more members. Therefore, our project aims to fill this gap by providing a lightweight and customizable alternative for small teams who value independence, privacy, and collaboration. Compared with the products of large companies, it is more transparent and more controllable.
+
 ------
 
 ## 3. Objectives
 
-testsetestsetsetest
-
+The main objective of our project is to build a cloud-based content sharing and collaboration platform that allows users to upload, manage, and share their files easily in a private environment while maintaining full control over their data. Our platform will be self-hosted on DigitalOcean, which gives users the freedom to manage their own storage, access policies, and system configuration. Specifically, our project aims to (broken down into simple points) :
+   1. Enable secure file upload and storage
+   2. Implement Version Control for Uploaded Files
+   3. Offer a fully self-hosted and customizable solution
+   4. Ensure Cost-Efficiency and Scalability
+   5. Create a simple and user-friendly interface
 
 ------
 
@@ -105,7 +110,7 @@ npm run dev
 
 1. Switch docker environment to minikube:
 
-   - Windows PowerShell:
+   Windows PowerShell:
 
      ```powershell
      minikube -p minikube docker-env --shell powershell | Invoke-Expression
@@ -207,17 +212,19 @@ The course requires at least integrating provider tool's logs or metrics, and se
 - Member 1 Astra Yu
   - Local development and code implementation, including completing the main backend and frontend framework code development locally.
   - Implemented the five core functions of the project, such as Docker build and debugging and all containerization operations, local Kubernetes (Minikube) environment setup and debugging, multi-cloud deployment: migration from Fly.io → DigitalOcean, database and storage configuration, etc.
-  - Write documents.
+  - Scripting the documents needed to be presented.
 - Member 2 Axel Tang
    - Development on the UI , two adavanced features of HTTPS security and DigitalOcean Backup and Recovery of user file data
    - Development of previously noted core feature - File Versioning 
    - Development of routing such as login/logout and home page.
 ------
 
-## 13. Lessons Learned & Conclusion
+## 11. Lessons Learned & Conclusion
 
 
-During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build.
+Astra: During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build.
+
+Axel: Dealt with uncertainty, implementing brand new features that were untouched are no joke and needed time to figure out and iteratively test out. Although, we initially started out with fly.io, through Astra's guidance on changing to DigitalOcean, my implemented features have came across numerous bugs and failures, it is a lesson learnt for me as different platforms gives different results and new implementations are needed even if it on paper sounds similar (in terms of coding). At the end, I do find valuable lessons on communication and skillsets, being able to successfully implement a usable UI and creating something forefront gives a good engineer education experience for my behalf of my career. 
 
 
----testsetestset
+
