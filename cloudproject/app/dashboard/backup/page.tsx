@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface Backup {
   key: string;
@@ -102,7 +103,15 @@ export default function BackupPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Database Backup & Restore</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Database Backup & Restore</h1>
+          <Link
+            href="/dashboard"
+            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 font-medium"
+          >
+            ← Back to Dashboard
+          </Link>
+        </div>
 
         {/* Create Backup Section */}
         <div className="bg-white rounded-lg shadow p-6 mb-8">

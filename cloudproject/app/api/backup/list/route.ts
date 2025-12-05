@@ -4,25 +4,26 @@ import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3';
 export async function GET() {
   try {
     const s3Client = new S3Client({
-      endpoint: process.env.SPACES_ENDPOINT,
-      region: process.env.SPACES_REGION,
+      region: 'tor1',
+      endpoint: 'https://tor1.digitaloceanspaces.com',
       credentials: {
-        accessKeyId: process.env.SPACES_KEY!,
-        secretAccessKey: process.env.SPACES_SECRET!,
+        accessKeyId: 'DO00ABEDTKZQZTQA39AN',
+        secretAccessKey: 'JFySfaRlPqZHJu4C+fgx0uS5MSjMlhpv3qKobOJVriw',
       },
     });
 
     const command = new ListObjectsV2Command({
-      Bucket: process.env.SPACES_BUCKET,
+      Bucket: 'cloudproject',
       Prefix: 'backups/',
     });
 
     const response = await s3Client.send(command);
 
     const backups = (response.Contents || [])
-      .filter((item) => item.Key && item.Key.endsWith('.dump.gz'))
+      .filter((item) => item.Key && item.Key.endsWith('.sql'))
       .map((item) => ({
         key: item.Key,
+        name: item.Key?.split('/').pop() || 'Unknown',
         size: item.Size,
         lastModified: item.LastModified,
       }))
@@ -37,7 +38,7 @@ export async function GET() {
       backups,
     });
   } catch (error: any) {
-    console.error('Failed to list backups:', error);
+    console.error('Failed to list backups:', error.message);
     return NextResponse.json(
       {
         success: false,
