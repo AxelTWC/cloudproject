@@ -4,6 +4,12 @@
 >
 > **Short purpose:** A task management / file upload example application based on Next.js + Node + PostgreSQL, demonstrating containerization, Kubernetes orchestration and persistent storage, as well as cloud deployment and monitoring.
 >
+> **Deployment URL:** http://146.190.189.176
+>
+> 
+>
+> 
+>
 > # **Video Demo:** PUT URL HERE!!!!!
 
 ------
