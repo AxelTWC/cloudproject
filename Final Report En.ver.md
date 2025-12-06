@@ -63,7 +63,7 @@ The main objective of our project is to build a cloud-based content sharing and 
 
 ## 6. User Guide
 
-### Access
+### Deployment URL
 
 - Cloud: http://146.190.189.176
 
@@ -225,6 +225,7 @@ The course requires at least integrating provider tool's logs or metrics, and se
 Astra: During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build.
 
 Axel: Dealt with uncertainty, implementing brand new features that were untouched are no joke and needed time to figure out and iteratively test out. Although, we initially started out with fly.io, through Astra's guidance on changing to DigitalOcean, my implemented features have came across numerous bugs and failures, it is a lesson learnt for me as different platforms gives different results and new implementations are needed even if it on paper sounds similar (in terms of coding). At the end, I do find valuable lessons on communication and skillsets, being able to successfully implement a usable UI and creating something forefront gives a good engineer education experience for my behalf of my career. 
+
 
 
 
