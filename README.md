@@ -136,11 +136,12 @@ PORT=3000
 COOKIE_SECURE="false"
 DISABLE_HTTPS_REDIRECT="true"
 
-# DigitalOcean Spaces (Optional - for file storage)
-DO_SPACES_ENDPOINT=""
-DO_SPACES_BUCKET=""
-DO_SPACES_ACCESS_KEY=""
-DO_SPACES_SECRET_KEY=""
+# DigitalOcean Spaces (Given if needed)
+SPACES_KEY=""
+SPACES_SECRET=""
+SPACES_BUCKET=cloudproject
+SPACES_ENDPOINT=https://tor1.digitaloceanspaces.com
+SPACES_REGION=tor1
 ```
 
 **Important:** Replace database password and other values as needed.
@@ -464,3 +465,4 @@ Overall, our monitoring setup gives us clear visibility into the system behavior
 **Astra:** During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build. This is the first time I worked with cloud technology. In my undergraduate study I never learned anything related to cloud, so everything in this course was totally new for me. Because of that, this course became a really big challenge. It was also my first time doing a course project in only two person team, so during the whole process I felt a lot of pressure. I was always worried that I could not do it well, and sometimes I even felt I might fail the project. To be honest, this is the first time I really needed to take the main responsibility in a project. I always think that my coding skills are not very good compared to my classmates, and cloud and deployment are completely different things, so I was very stressed. Luckily, after many days of trying, searching, and fixing problems one by one, I finally finished the project at the end. Even though the process was difficult, I learned a lot and I feel a strong sense of achievement. For me, this project was not easy at all, but I really put in a lot of effort, and completing it made me feel proud of myself.
 
 **Axel:** Dealt with uncertainty, implementing brand new features that were untouched are no joke and needed time to figure out and iteratively test out. Although, we initially started out with fly.io, through Astra's guidance on changing to DigitalOcean, my implemented features have came across numerous bugs and failures, it is a lesson learnt for me as different platforms gives different results and new implementations are needed even if it on paper sounds similar (in terms of coding). At the end, I do find valuable lessons on communication and skillsets, being able to successfully implement a usable UI and creating something forefront gives a good engineer education experience for my behalf of my career.
+
