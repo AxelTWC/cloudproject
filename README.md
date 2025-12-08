@@ -5,14 +5,12 @@
 > **Short purpose:** A task management / file upload example application based on Next.js + Node + PostgreSQL, demonstrating containerization, Kubernetes orchestration and persistent storage, as well as cloud deployment and monitoring.
 >
 > **Deployment URL:** http://146.190.189.176
->
-> 
->
-> 
->
-> **Video Demo:** https://youtu.be/NVQojuh_lUs
 
 ------
+
+## Video Demo: 
+
+https://youtu.be/NVQojuh_lUs
 
 ## 1. Team Information
 
@@ -35,7 +33,11 @@ Existing solutions like Google Drive are powerful, but they are not suitable for
 
 ## 3. Objectives
 
-The main objective of our project is to build a cloud-based content sharing and collaboration platform that allows users to upload, manage, and share their files easily in a private environment while maintaining full control over their data. Our platform will be self-hosted on DigitalOcean, which gives users the freedom to manage their own storage, access policies, and system configuration. Specifically, our project aims to (broken down into simple points):
+The main objective of our project is to build a cloud-based content sharing and collaboration platform that allows users to upload, manage, and share their files easily in a private environment while maintaining full control over their data. In today's digital landscape, where data privacy and security have become paramount concerns for both individuals and organizations, there is an increasing demand for solutions that offer robust functionality without compromising user autonomy. Our platform addresses this critical need by providing a comprehensive solution that prioritizes user sovereignty over their digital assets.
+
+Our platform will be self-hosted on DigitalOcean, which gives users the freedom to manage their own storage, access policies, and system configuration. By leveraging DigitalOcean's reliable and scalable infrastructure, we ensure that users benefit from our great performance and availability while retaining complete administrative control. This self-hosted approach stands in stark contrast to traditional cloud storage services where users must entrust their sensitive data to third-party providers and accept predetermined terms of service. Instead, our solution empowers users to establish their own data governance frameworks, customize security protocols according to their specific requirements, and maintain transparency in how their information is stored and processed.
+
+Specifically, our project aims to (broken down into simple points):
 
 1. Enable secure file upload and storage
 2. Implement Version Control for Uploaded Files
@@ -47,43 +49,183 @@ The main objective of our project is to build a cloud-based content sharing and 
 
 ## 4. Technical Stack
 
+**Core Technologies:**
+
 - **Runtime:** Node.js 22
-- **Frontend:** Next.js 16
-- **ORM:** Prisma v6.x
+- **Framework:** Next.js 16.0.1 (React-based full-stack framework)
+- **Language:** TypeScript 5
+- **UI Library:** React 19.1.0
+- **Database ORM:** Prisma 5.22.0
 - **Database:** PostgreSQL 15
-- **Container:** Docker, image pushed to DockerHub (lanskette/cloudproject:latest)
-- **Local Orchestration:** Minikube (for development/testing)
-- **Cloud Orchestration:** DigitalOcean Kubernetes (DOKS) (exposed via LoadBalancer)
-- **Cloud Backup:** Fly.io (used for early testing/metrics—migrated to DO)
-- **Persistence:** Kubernetes PersistentVolume + PersistentVolumeClaim
+- **Styling:** Tailwind CSS 3.4
+
+**Container & Orchestration:**
+
+- **Containerization:** Docker (image: lanskette/cloudproject:latest on DockerHub)
+- **Local Kubernetes:** Minikube (for development and testing)
+- **Production Kubernetes:** DigitalOcean Kubernetes (DOKS)
+- **Load Balancing:** Kubernetes LoadBalancer service
+- **Storage:** Kubernetes PersistentVolume + PersistentVolumeClaim
+
+**Cloud Services:**
+
+- **File Storage:** DigitalOcean Spaces (S3-compatible object storage via AWS SDK 3.929.0)
+- **Monitoring:** DigitalOcean Kubernetes Insights + Custom health endpoints
+
+**Authentication & Security:**
+
+- **Authentication:** JWT (jsonwebtoken 9.0.2)
+- **Password Hashing:** bcrypt 6.0.0
+- **Session Management:** Cookie-based sessions (cookie 1.0.2)
+- **Security Headers:** Custom middleware for HTTP security headers
+
+**Development Tools:**
+
+- **Version Control:** Git & GitHub
+- **Package Manager:** npm
+- **Database Management:** Prisma Studio
+- **CSS Processing:** PostCSS 8.5 + Autoprefixer 10.4
+
+**Note:** Fly.io was used for early testing and log collection but is not part of the final production deployment.
 
 ------
 
 ## 5. Features
 
-- Users can register/login (based on JWT).
-- File management (create/view/modify/delete files).
-- File upload (upload and save to persistent volume / Fly mount or DO storage).
-- Backend provides RESTful API (Prisma + PostgreSQL).
-- Deployment: runs on local Minikube, runs on cloud DOKS and is publicly accessible.
-- Persistence: Postgres data exists in PVC, data remains after Pod restart/deletion.
-- Monitoring/Logging: use kubectl logs, kubectl top (cluster side) and Fly.io fly logs (previously used for testing) to view logs and basic metrics.
+### User Management
+
+- **User Registration:** Create new accounts with email and password
+- **User Authentication:** Secure login system using JWT tokens
+- **Session Management:** Cookie-based session handling with configurable security settings
+- **Password Security:** Passwords hashed using bcrypt algorithm
+
+### File Management
+
+- **File Upload:** Upload files to persistent storage
+- **File Listing:** View all uploaded files with metadata (name, upload date)
+- **File Download:** Download previously uploaded files
+- **File Deletion:** Remove files from storage
+- **File Versioning:** Track and restore previous versions of files
+- **File Tagging:** Organize files with custom tags
+- **File Comments:** Add comments and notes to files
+
+### Database Backup & Restore
+
+- # !!!!!!!TODO
+
+### Deployment & Orchestration
+
+- **Local Development:** Run on Minikube for testing
+- **Production Deployment:** Deployed on DigitalOcean Kubernetes (DOKS)
+- **Public Access:** Accessible via LoadBalancer at http://146.190.189.176
+- **Container Management:** Automated pod restart on failure
+- **Rolling Updates:** Zero-downtime deployment with rolling update strategy
+
+### Data Persistence
+
+- **Database Persistence:** PostgreSQL data stored in PersistentVolumeClaim
+- **Data Durability:** Data survives pod restarts and deletions
+- **File Storage:** Uploaded files stored in DigitalOcean Spaces 
+- **Backup Storage:** Database backups persisted in cloud storage
+
+### Monitoring & Observability
+
+- **Health Checks:** Custom `/api/health` endpoint for application status monitoring
+- **Application Metrics:** Prometheus-compatible metrics at `/api/metrics` endpoint
+- **Kubernetes Probes:** Liveness and readiness probes for automatic pod health management
+- **Platform Monitoring:** DigitalOcean Insights dashboard for CPU, memory, disk, and network metrics
+- **Automated Alerts:** Configured alerts for high resource usage (CPU >80%, Memory >85%, Disk >90%)
+- **Log Management:** Access logs via `kubectl logs` for troubleshooting
+
+### API Endpoints
+
+- **RESTful API:** Well-structured REST API for all operations
+- **Authentication APIs:** `/api/register`, `/api/login`, `/api/logout`
+- **File APIs:** `/api/files`, `/api/upload`, `/api/download/[filename]`
+- **Backup APIs:** `/api/backup/create`, `/api/backup/restore`, `/api/backup/list`
+- **Monitoring APIs:** `/api/health`, `/api/metrics`
+
+### Security Features
+
+# !!!!!!!!!!todo
 
 ------
 
-## 6. User Guide
+## 6.User Guide
 
-### Deployment URL
+### Deployment Access
 
-- **Cloud:** http://146.190.189.176
+**URL:** http://146.190.189.176
 
-### Common Operations
+**Note:** The application uses HTTP (not HTTPS) for this deployment. In a production environment, HTTPS should be configured for security.
 
-1. **Register:** Click Register, enter email/password → Submit.
-2. **Login:** Login with registered account (session uses JWT stored in cookie/localStorage).
-3. **Create New File:** Click "Upload File", upload the file you want to share.
-4. **Edit File:** Click "View Versions", you can view the file's history versions, and add TAG or COMMENT.
-5. **Delete File:** Click Delete in the file list.
+### Troubleshooting
+
+If the application becomes unresponsive:
+
+1. **Check pod status:**
+
+```bash
+   kubectl get pods
+```
+
+2. **restart it:**
+
+```bash
+   kubectl delete pod <pod-name>
+   # Kubernetes will automatically create a new pod
+```
+
+3. **Wait for the new pod to be ready, after the pod restarts, just refresh the webpage.**
+
+### Getting Started
+
+#### 1. User Registration
+
+1. Navigate to http://146.190.189.176/register
+2. Enter your email address and password
+3. Click "Register" to create your account
+4. You will be redirected to the login page
+
+#### 2. User Login
+
+1. Go to http://146.190.189.176/login
+2. Enter your registered email and password
+3. Click "Login"
+4. Upon successful login, you'll be redirected to the dashboard
+5. Session is managed via JWT token stored in browser cookies
+
+#### 3. File Upload
+
+1. From the dashboard, click "Choose File" and select a file from your computer
+2. Click "Upload" will navigate to the upload section to save the file
+3. The file will be stored in persistent storage and appear in your file list
+
+#### 4. File Management
+
+1. **View Files:** All your uploaded files are displayed in the dashboard
+2. **Download Files:** Click on a file to download it
+3. **Delete Files:** Click the "Delete" button next to any file to remove it
+4. **Add Tags:** Click "Add Tag" to add custom tags for organizing files
+5. **Add Comments:** Click "Add Comments" to add comments or notes to files
+
+#### 5. File Versioning
+
+1. Click "View Versions" on any file
+2. See the complete history of file modifications
+3. Restore a previous version if needed
+4. View when made changes
+
+### Tips for Best Experience
+
+1. **Supported File Types:** All file types are supported
+2. **Network:** Stable internet connection recommended for file uploads
+
+### Known Limitations
+
+- The application currently uses HTTP instead of HTTPS (for demonstration purposes)
+- Large file uploads may take some time depending on network speed
+- Pod restarts may cause brief service interruptions
 
 ------
 
@@ -465,5 +607,3 @@ Overall, our monitoring setup gives us clear visibility into the system behavior
 **Astra:** During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build. This is the first time I worked with cloud technology. In my undergraduate study I never learned anything related to cloud, so everything in this course was totally new for me. Because of that, this course became a really big challenge. It was also my first time doing a course project in only two person team, so during the whole process I felt a lot of pressure. I was always worried that I could not do it well, and sometimes I even felt I might fail the project. To be honest, this is the first time I really needed to take the main responsibility in a project. I always think that my coding skills are not very good compared to my classmates, and cloud and deployment are completely different things, so I was very stressed. Luckily, after many days of trying, searching, and fixing problems one by one, I finally finished the project at the end. Even though the process was difficult, I learned a lot and I feel a strong sense of achievement. For me, this project was not easy at all, but I really put in a lot of effort, and completing it made me feel proud of myself.
 
 **Axel:** Dealt with uncertainty, implementing brand new features that were untouched are no joke and needed time to figure out and iteratively test out. Although, we initially started out with fly.io, through Astra's guidance on changing to DigitalOcean, my implemented features have came across numerous bugs and failures, it is a lesson learnt for me as different platforms gives different results and new implementations are needed even if it on paper sounds similar (in terms of coding). At the end, I do find valuable lessons on communication and skillsets, being able to successfully implement a usable UI and creating something forefront gives a good engineer education experience for my behalf of my career.
-
-
