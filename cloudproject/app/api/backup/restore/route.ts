@@ -7,6 +7,7 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 
 const execAsync = promisify(exec);
 
+// Download backup file from DigitalOcean Spaces
 async function downloadFromSpaces(backupKey: string, localPath: string): Promise<boolean> {
   try {
     const s3Client = new S3Client({
@@ -29,7 +30,7 @@ async function downloadFromSpaces(backupKey: string, localPath: string): Promise
     return new Promise((resolve) => {
       const writeStream = fs.createWriteStream(localPath);
       stream.pipe(writeStream);
-
+      
       writeStream.on('finish', () => {
         console.log(`Downloaded backup from Spaces: ${backupKey}`);
         resolve(true);
@@ -46,50 +47,11 @@ async function downloadFromSpaces(backupKey: string, localPath: string): Promise
   }
 }
 
-async function performRestore(backupFile: string) {
+export async function POST(request: Request) {
   const downloadDir = '/tmp';
   const backupFileName = `restore-${Date.now()}.sql`;
   const backupFilePath = path.join(downloadDir, backupFileName);
 
-  try {
-    console.log(`Starting restore for: ${backupFile}`);
-
-    console.log('Downloading backup file from Spaces...');
-    const downloadSuccess = await downloadFromSpaces(backupFile, backupFilePath);
-
-    if (!downloadSuccess) {
-      console.error('Failed to download backup file from Spaces');
-      return;
-    }
-
-    console.log('Starting restore process...');
-    
-    const restoreCommand = `psql -h cloudproject-postgres -U postgres -d cloudproject < ${backupFilePath}`;
-    const env = { ...process.env, PGPASSWORD: '123' };
-
-    const { stdout, stderr } = await execAsync(restoreCommand, { env });
-    console.log('Restore completed');
-
-    if (stderr) {
-      console.warn('Restore warnings:', stderr);
-    }
-
-    if (fs.existsSync(backupFilePath)) {
-      fs.unlinkSync(backupFilePath);
-      console.log('Local backup file deleted');
-    }
-
-    console.log('Restore completed successfully');
-  } catch (error: any) {
-    console.error('Restore failed:', error.message);
-
-    if (fs.existsSync(backupFilePath)) {
-      fs.unlinkSync(backupFilePath);
-    }
-  }
-}
-
-export async function POST(request: Request) {
   try {
     const { backupFile } = await request.json();
 
@@ -100,22 +62,57 @@ export async function POST(request: Request) {
       );
     }
 
-   
-    performRestore(backupFile).catch(err => {
-      console.error('Background restore error:', err);
-    });
+    console.log(`Starting restore for: ${backupFile}`);
+
+    // Download backup file from Spaces
+    console.log('Downloading backup file from Spaces...');
+    const downloadSuccess = await downloadFromSpaces(backupFile, backupFilePath);
+
+    if (!downloadSuccess) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Failed to download backup file from Spaces',
+        },
+        { status: 500 }
+      );
+    }
+
+    // Run pg_restore to restore the database
+    console.log('Starting restore process...');
+    const restoreCommand = `psql -h cloudproject-postgres -U postgres -d cloudproject < ${backupFilePath}`;
+    const env = { ...process.env, PGPASSWORD: '123' };
+
+    const { stdout, stderr } = await execAsync(restoreCommand, { env });
+    console.log('Restore completed');
+
+    if (stderr) {
+      console.warn('Restore warnings:', stderr);
+    }
+
+    // Clean up local file
+    if (fs.existsSync(backupFilePath)) {
+      fs.unlinkSync(backupFilePath);
+      console.log('Local backup file deleted');
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Restore started in background',
+      message: 'Restore completed successfully',
+      output: stdout,
     });
   } catch (error: any) {
-    console.error('Restore request failed:', error.message);
+    console.error('Restore failed:', error.message);
+
+    // Clean up on error
+    if (fs.existsSync(backupFilePath)) {
+      fs.unlinkSync(backupFilePath);
+    }
 
     return NextResponse.json(
       {
         success: false,
-        message: 'Restore request failed',
+        message: 'Restore failed',
         error: error.message,
       },
       { status: 500 }
