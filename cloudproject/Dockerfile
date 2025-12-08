@@ -4,19 +4,19 @@ FROM node:22 AS base
 FROM base AS builder
 WORKDIR /app
 
-
 COPY package*.json ./
+COPY prisma ./prisma/
+
 RUN npm ci
 
-
 COPY . .
-RUN npx prisma generate
+
+RUN npx prisma@5.22.0 generate
 RUN npm run build
 
 
 FROM base AS runner
 WORKDIR /app
-
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
@@ -37,12 +37,14 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/prisma ./prisma
+
 EXPOSE 3000
 
-# CMD ["node", "server.js"]
-CMD ["sh", "-c", "npx prisma migrate deploy && next start -H 0.0.0.0 -p ${PORT:-3000}"]
+CMD ["sh", "-c", "npx prisma@5.22.0 migrate deploy && node server.js"]
