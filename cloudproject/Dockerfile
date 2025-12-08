@@ -44,4 +44,5 @@ COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# CMD ["node", "server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && next start -H 0.0.0.0 -p ${PORT:-3000}"]
