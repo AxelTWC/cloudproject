@@ -235,12 +235,12 @@ If the application becomes unresponsive:
 
 Required software and tools:
 
-- **Node.js 22+** and npm
-- **Docker Desktop**
-- **kubectl** and **minikube** (for local Kubernetes testing)
-- **Prisma CLI:** `npm i -D prisma` (already included in project dependencies)
-- **doctl** (DigitalOcean CLI, for cloud deployment)
-- **PostgreSQL** (for local database)
+- Node.js 22+ and npm
+- Docker Desktop
+- kubectl and minikube (for local Kubernetes testing)
+- Prisma CLI: `npm i -D prisma` (already included in project dependencies)
+- doctl (DigitalOcean CLI, for cloud deployment)
+- PostgreSQL 15 +(for local database)
 
 ### Local Development Setup
 
@@ -248,7 +248,7 @@ Required software and tools:
 
 ```bash
 git clone https://github.com/AxelTWC/cloudproject.git
-cd cloudproject
+cd cloudproject/cloudproject
 ```
 
 #### Step 2: Install Dependencies
@@ -257,33 +257,28 @@ cd cloudproject
 npm install
 ```
 
-This will install all required packages including Prisma.
+This will install all required packages including Prisma 5.22.0.
 
 #### Step 3: Configure Environment Variables
 
 Create a `.env` file in the project root:
 
 ```env
-# Database Connection
-DATABASE_URL="postgresql://postgres:123@localhost:5432/cloudproject?schema=public"
-
-# Application Settings
-NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-AUTH_URL="http://localhost:3000"
-JWT_SECRET="super_secret_key"
-NODE_ENV="development"
-PORT=3000
-
-# Cookie Settings (for local development)
-COOKIE_SECURE="false"
+SPACES_KEY=DO00ABEDTKZQZTQA39AN 
+SPACES_SECRET=JFySfaRlPqZHJu4C+fgx0uS5MSjMlhpv3qKobOJVriw 
+SPACES_BUCKET=cloudproject 
+SPACES_ENDPOINT=https://tor1.digitaloceanspaces.com 
+SPACES_REGION=tor1 
+DATABASE_URL="postgresql://postgres:123@localhost:5432/cloudproject?schema=public" 
+# Application Settings 
+NEXT_PUBLIC_SITE_URL="http://localhost:3000" 
+AUTH_URL="http://localhost:3000" 
+JWT_SECRET="super_secret_key" 
+NODE_ENV="development" 
+PORT=3000 
+# Cookie Settings (for local development) 
+COOKIE_SECURE="false" 
 DISABLE_HTTPS_REDIRECT="true"
-
-# DigitalOcean Spaces (Given if needed)
-SPACES_KEY=""
-SPACES_SECRET=""
-SPACES_BUCKET=cloudproject
-SPACES_ENDPOINT=https://tor1.digitaloceanspaces.com
-SPACES_REGION=tor1
 ```
 
 **Important:** Replace database password and other values as needed.
@@ -390,16 +385,8 @@ Visit the URL provided by the last command to access your application.
 # Authenticate with DigitalOcean
 doctl auth init
 # Enter your API token when prompted
-
 # Download kubeconfig
 doctl kubernetes cluster kubeconfig save <cluster-name>
-```
-
-**Verify connection:**
-
-```bash
-kubectl config current-context
-kubectl get nodes
 ```
 
 #### Step 3: Build and Push Docker Image
@@ -529,7 +516,13 @@ curl http://146.190.189.176/api/metrics
 
 ## 9. Monitoring & Observability
 
-The course requires at least integrating provider tool's logs or metrics, and setting up basic alerts / dashboards. We implemented/documented the following workflow:
+Our monitoring and observability implementation meets course requirements by integrating provider tools and custom health endpoints. The system provides comprehensive visibility into both infrastructure and application performance.
+
+We implemented a multi-layered monitoring approach: 
+
+1. Infrastructure Monitoring - DigitalOcean Kubernetes Insights 
+2. Application Monitoring - Custom health and metrics endpoints 
+3. Container Monitoring - Kubernetes logs and resource monitoring
 
 ### 1) Fly.io Logs (during early deployment)
 
@@ -560,29 +553,25 @@ DO panel monitoring
 
 In our project, we use several monitoring methods together to make sure the system runs normally. The main idea is to check both the infrastructure (DigitalOcean) and the application itself, so we can know the system status quickly and fix problems fast.
 
-First, we use DigitalOcean Kubernetes Insights. It gives us real-time and historical data about CPU, memory, disk I/O, and network traffic. This tool is already built into DigitalOcean, so we don’t need to install anything. It is very useful for checking if the cluster is healthy, and we can easily see if there are unusual spikes that might cause problems.
+First, we use DigitalOcean Kubernetes Insights. It gives us real-time and historical data about CPU, memory, disk I/O, and network traffic. This tool is already built into DigitalOcean, so we don't need to install anything. It is very useful for checking if the cluster is healthy, and we can easily see if there are unusual spikes that might cause problems.
 
-For the application level, we created two important endpoints. The first one is the health check endpoint (`/api/health`). It returns the system status, database connection, response time, uptime, and memory usage. This endpoint is used by us and also by Kubernetes. For example, if we want to check the health manually, we can run:
+For the application level, we created two important endpoints. The first one is the health check endpoint `/api/health`. It returns the system status, database connection, response time, uptime, and memory usage. For example, if we want to check the health manually, we can run:
 
 ```bash
 # Check application health
 curl http://146.190.189.176/api/health
 ```
 
-The second one is the metrics endpoint (`/api/metrics`). It outputs data, including total users, total uploaded files, Node.js memory usage, and uptime. This helps us observe long-term performance trends. We can view these metrics with:
+The second one is the metrics endpoint `/api/metrics`. It outputs data, including total users, total uploaded files, Node.js memory usage, and uptime. This helps us observe long-term performance trends. We can view these metrics with:
 
 ```bash
 # View metrics
 curl http://146.190.189.176/api/metrics
 ```
 
-We also use Kubernetes liveness and readiness probes, and both of them point to the `/api/health` endpoint. The liveness probe makes Kubernetes restart the pod if the application is stuck. The readiness probe checks if the application is ready to receive traffic. This makes the system more stable because unhealthy pods will not affect users.
-
-To make monitoring more proactive, we also set up DigitalOcean alerts. These alerts notify us when CPU, memory, disk usage, or load average becomes too high. Alerts can be sent by email or through other channels. With this, we can know about system issues before they become serious.
-
 In daily work, we usually open DigitalOcean Insights to check the charts, then call the `/api/health` endpoint to see if the system is healthy, look at the metrics to understand current usage, and use Kubernetes commands to see pod status. This process helps us find problems early. For example, if CPU usage is high, we can check pod logs or see if any query is too slow. If the application becomes unhealthy, we check the health output and logs to find the cause. If memory keeps increasing for a long time, it may mean a memory leak.
 
-Overall, our monitoring setup gives us clear visibility into the system behavior. It helps us detect problems early, fix bugs quickly, and keep the service stable. During the project, the system usually responds in 15–30 ms, resource usage stays low, and uptime is more than 99.5%. This shows our monitoring and observability design works well.
+Overall, our monitoring setup gives us clear visibility into the system behavior. It helps us detect problems early, fix bugs quickly, and keep the service stable. During the project, the system usually responds in 15–30 ms, resource usage stays low, and the service runs reliably. This shows our monitoring and observability design works well.
 
 ------
 
@@ -590,9 +579,9 @@ Overall, our monitoring setup gives us clear visibility into the system behavior
 
 ### Member 1: Astra Yu
 
-- Local development and code implementation, including completing the main backend and frontend framework code development locally.
-- Implemented the five core functions of the project, such as Docker build and debugging and all containerization operations, local Kubernetes (Minikube) environment setup and debugging, multi-cloud deployment: migration from Fly.io → DigitalOcean, database and storage configuration, etc.
-- Scripting the documents needed to be presented.
+- Local Development: Developed full-stack application with Next.js, implementing authentication, file management, and database integration
+- Implemented the five core functions of the project, including containerization: dockerized application and configured Docker Compose for multi-container setup (app + PostgreSQL) / state management: implemented PostgreSQL with Prisma ORM and configured DigitalOcean Volumes for persistent storage; resolved connection pooling issues / kubernetes orchestration: set up Minikube locally and deployed to DigitalOcean Kubernetes with Deployments, Services, and PersistentVolumes / deployment: Migrated infrastructure from Fly.io to DigitalOcean, integrating AWS S3 for file storage / monitoring: Integrated DigitalOcean metrics monitoring and implemented custom health check endpoints
+- Documentation.
 
 ### Member 2: Axel Tang
 
@@ -604,6 +593,7 @@ Overall, our monitoring setup gives us clear visibility into the system behavior
 
 ## 11. Lessons Learned & Conclusion
 
-**Astra:** During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build. This is the first time I worked with cloud technology. In my undergraduate study I never learned anything related to cloud, so everything in this course was totally new for me. Because of that, this course became a really big challenge. It was also my first time doing a course project in only two person team, so during the whole process I felt a lot of pressure. I was always worried that I could not do it well, and sometimes I even felt I might fail the project. To be honest, this is the first time I really needed to take the main responsibility in a project. I always think that my coding skills are not very good compared to my classmates, and cloud and deployment are completely different things, so I was very stressed. Luckily, after many days of trying, searching, and fixing problems one by one, I finally finished the project at the end. Even though the process was difficult, I learned a lot and I feel a strong sense of achievement. For me, this project was not easy at all, but I really put in a lot of effort, and completing it made me feel proud of myself.
+**Astra:** Throughout this project, I encountered numerous technical challenges that deepened my understanding of cloud deployment and containerization. One significant lesson was learning the critical differences between development and production environments. During coding, I repeatedly switched between development mode and production mode, because sometimes to solve some bugs that suddenly appeared, I switched modes after searching for information, but this repeated switching is very easy to cause new problems, leading to new bugs. Mistakenly using development mode (next dev) for production will cause unexpected issues (such as automatically redirecting to https://0.0.0.0:3000, etc.). In production images, you need to ensure using next start (or standalone server.js) after next build. Another major challenge was managing database connections in a containerized environment. I discovered that improper Prisma Client initialization led to connection pool exhaustion, causing the application to fail intermittently. This taught me the importance of singleton patterns and proper resource management in production applications. Additionally, dealing with version conflicts between Prisma packages highlighted how critical dependency management is in cloud deployments—a single version mismatch can cause complete application failures that are difficult to diagnose. The migration from Fly.io to DigitalOcean also presented unexpected complexities. Each platform has different networking configurations, environment variable handling, and storage solutions. Learning to adapt the same application to different cloud providers gave me practical insight into cloud-agnostic design principles and the importance of understanding provider-specific implementations. This is the first time I worked with cloud technology. In my undergraduate study I never learned anything related to cloud, so everything in this course was totally new for me. Because of that, this course became a really big challenge. It was also my first time doing a course project in only two person team, so during the whole process I felt a lot of pressure. I was always worried that I could not do it well, and sometimes I even felt I might fail the project. To be honest, this is the first time I really needed to take the main responsibility in a project. I always think that my coding skills are not very good compared to my classmates, and cloud and deployment are completely different things, so I was very stressed. Luckily, after many days of trying, searching, and fixing problems one by one, I finally finished the project at the end. Even though the process was difficult, I learned a lot and I feel a strong sense of achievement. For me, this project was not easy at all, but I really put in a lot of effort, and completing it made me feel proud of myself.
 
 **Axel:** Dealt with uncertainty, implementing brand new features that were untouched are no joke and needed time to figure out and iteratively test out. Although, we initially started out with fly.io, through Astra's guidance on changing to DigitalOcean, my implemented features have came across numerous bugs and failures, it is a lesson learnt for me as different platforms gives different results and new implementations are needed even if it on paper sounds similar (in terms of coding). At the end, I do find valuable lessons on communication and skillsets, being able to successfully implement a usable UI and creating something forefront gives a good engineer education experience for my behalf of my career.
+
